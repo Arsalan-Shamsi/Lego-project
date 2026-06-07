@@ -49,6 +49,16 @@ def something_is_too_close():
     return distance < STOP_DISTANCE_CM
 
 
+def flash_red_and_yellow(times=4):
+    """Blink the hub's button light red and yellow as a warning."""
+    for _ in range(times):
+        hub.status_light.on('red')
+        wait_for_seconds(0.15)
+        hub.status_light.on('yellow')
+        wait_for_seconds(0.15)
+    hub.status_light.on('white')   # back to normal when done
+
+
 # ---- Main program: this runs over and over until you press Stop ----
 hub.light_matrix.show_image('HAPPY')   # little smiley so you know it started
 
@@ -57,6 +67,7 @@ while True:
         # Obstacle ahead! React.
         hub.light_matrix.show_image('NO')   # frowny face
         wheels.stop()
+        flash_red_and_yellow()              # warning lights!
 
         # Back up a bit so we have room to turn.
         wheels.start(0, -DRIVE_SPEED)
